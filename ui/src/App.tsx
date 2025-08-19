@@ -6,6 +6,7 @@ export interface Message {
   role: "user" | "assistant";
   content: string;
 }
+
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 function App() {
@@ -105,8 +106,10 @@ function App() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
-      <ChatWindow messages={messages} onClear={() => setMessages([])} />
+    <div className="h-screen flex flex-col">
+      <div className="flex-1 overflow-y-auto">
+        <ChatWindow messages={messages} onClear={() => setMessages([])} />
+      </div>
       <div className="p-4 bg-white border-t flex gap-2">
         <input
           type="text"
@@ -120,7 +123,7 @@ function App() {
         <button
           onClick={sendMessage}
           disabled={loading}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+          className="bg-neutral-900 text-white px-4 py-2 rounded-lg"
         >
           {loading ? "Sending..." : "Send"}
         </button>

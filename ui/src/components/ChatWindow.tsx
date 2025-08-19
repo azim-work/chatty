@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import type { Message } from "../App";
 import MessageBubble from "./MessageBubble";
 
@@ -8,26 +7,41 @@ type Props = {
 };
 
 const ChatWindow = ({ messages, onClear }: Props) => {
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-2 max-h-[calc(100vh-100px)]">
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={onClear}
-          className="text-sm px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition"
-        >
-          Clear Chat
-        </button>
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex flex-col mb-4 px-4 pt-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-gray-700">Chatty</h1>
+          <button
+            onClick={onClear}
+            className="text-sm px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition"
+          >
+            Clear Chat
+          </button>
+        </div>
+        <p className="text-xs text-gray-500 mt-1">
+          Chat with an AI assistant powered by OpenAI.
+        </p>
       </div>
-      {messages.map((msg) => (
-        <MessageBubble key={msg.id} role={msg.role} content={msg.content} />
-      ))}
-      <div ref={bottomRef} />
+
+      {/* Messages OR Empty State */}
+      <div className="flex-1 px-4 pb-4 overflow-y-auto">
+        {messages.length === 0 ? (
+          <div className="h-full flex items-center justify-center text-3xl text-neutral-900">
+            Hey there, how can I help you today?
+          </div>
+        ) : (
+          messages.map((msg) => (
+            <MessageBubble
+              key={msg.id}
+              role={msg.role}
+              content={msg.content}
+              timestamp={msg.timestamp}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 };

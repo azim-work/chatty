@@ -5,15 +5,19 @@ type Props = {
 
 const MessageBubble = ({ role, content }: Props) => {
   const isUser = role === "user";
+
+  const containerClass = "max-w-xl";
+  const bubbleClass = isUser
+    ? "bg-neutral-800 text-white px-4 py-2 rounded-b-xl rounded-tl-xl"
+    : "bg-gray-50 text-gray-800 text-sm px-4 py-2 rounded-b-xl rounded-tr-xl";
+
   return (
     <div
-      className={`max-w-xl px-4 py-2 rounded-lg ${
-        isUser
-          ? "bg-blue-500 text-white self-end ml-auto"
-          : "bg-white text-black self-start mr-auto"
-      }`}
+      className={`flex flex-col ${isUser ? "items-end" : "items-start"} w-full`}
     >
-      {content}
+      <div className={containerClass}>
+        <div className={bubbleClass}>{content}</div>
+      </div>
     </div>
   );
 };
