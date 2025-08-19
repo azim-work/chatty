@@ -33,12 +33,7 @@ const ChatWindow = ({ messages, onClear }: Props) => {
           </div>
         ) : (
           messages.map((msg) => (
-            <MessageBubble
-              key={msg.id}
-              role={msg.role}
-              content={msg.content}
-              timestamp={msg.timestamp}
-            />
+            <MessageBubble key={msg.id} role={msg.role} content={msg.content} />
           ))
         )}
       </div>

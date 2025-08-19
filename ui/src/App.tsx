@@ -110,23 +110,26 @@ function App() {
       <div className="flex-1 overflow-y-auto">
         <ChatWindow messages={messages} onClear={() => setMessages([])} />
       </div>
-      <div className="p-4 bg-white border-t flex gap-2">
-        <input
-          type="text"
-          placeholder="Ask me anything..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={loading}
-          className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
-        />
-        <button
-          onClick={sendMessage}
-          disabled={loading}
-          className="bg-neutral-900 text-white px-4 py-2 rounded-lg"
-        >
-          {loading ? "Sending..." : "Send"}
-        </button>
+      {/* Input */}
+      <div className="p-8 bg-white  flex justify-center">
+        <div className="relative w-full max-w-4xl">
+          <input
+            type="text"
+            placeholder="Ask me anything..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={loading}
+            className="w-full border border-gray-500 rounded-full py-6 pl-8 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent"
+          />
+          <button
+            onClick={sendMessage}
+            disabled={loading}
+            className="absolute right-6 top-1/2 -translate-y-1/2 text-neutral-900 disabled:opacity-50"
+          >
+            ➤
+          </button>
+        </div>
       </div>
     </div>
   );
