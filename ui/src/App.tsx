@@ -223,6 +223,7 @@ function App() {
           <input
             type="text"
             placeholder="Ask me anything..."
+            autoFocus
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
