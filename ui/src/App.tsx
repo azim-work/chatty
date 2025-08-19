@@ -239,6 +239,10 @@ function App() {
           </button>
         </div>
       </div>
+      <div className="text-center text-xs text-gray-400 pb-4">
+        Please don’t enter sensitive or personal information. This is a public
+        demo.
+      </div>
     </div>
   );
 }
