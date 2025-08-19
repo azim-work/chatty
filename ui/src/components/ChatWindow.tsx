@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import type { Message } from "../App";
 import MessageBubble from "./MessageBubble";
 
@@ -7,6 +8,13 @@ type Props = {
 };
 
 const ChatWindow = ({ messages, onClear }: Props) => {
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  // scroll to bottom when messages change
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -32,9 +40,16 @@ const ChatWindow = ({ messages, onClear }: Props) => {
             Hey there, how can I help you today?
           </div>
         ) : (
-          messages.map((msg) => (
-            <MessageBubble key={msg.id} role={msg.role} content={msg.content} />
-          ))
+          <>
+            {messages.map((msg) => (
+              <MessageBubble
+                key={msg.id}
+                role={msg.role}
+                content={msg.content}
+              />
+            ))}
+            <div ref={bottomRef} />
+          </>
         )}
       </div>
     </div>
