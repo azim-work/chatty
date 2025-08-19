@@ -25,7 +25,7 @@ const ChatWindow = ({ modelName, messages, onClear, onLogout }: Props) => {
           <h1 className="text-lg font-semibold text-gray-700">Chatty</h1>
 
           {/* Centered model name */}
-          <span className="text-sm text-gray-500 absolute left-1/2 transform -translate-x-1/2">
+          <span className="hidden sm:inline text-xs text-gray-500">
             Model: {modelName}
           </span>
           <div className="flex gap-1">
