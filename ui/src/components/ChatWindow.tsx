@@ -22,13 +22,13 @@ const ChatWindow = ({ modelName, messages, onClear, onLogout }: Props) => {
       {/* Header */}
       <div className="flex flex-col mb-4 px-4 pt-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-700">
-            Chatty{" "}
-            <span className="text-xs font-normal text-gray-400">
-              ({modelName})
-            </span>
-          </h1>
-          <div className="flex gap-2">
+          <h1 className="text-lg font-semibold text-gray-700">Chatty</h1>
+
+          {/* Centered model name */}
+          <span className="text-sm text-gray-500 absolute left-1/2 transform -translate-x-1/2">
+            Model: {modelName}
+          </span>
+          <div className="flex gap-1">
             <button
               onClick={onClear}
               className="text-sm px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition"
