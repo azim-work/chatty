@@ -61,7 +61,8 @@ function App() {
           Authorization: `Bearer ${OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
+          model: "gpt-4o",
+          stream: true,
           messages: updatedMessages.map((m) => ({
             role: m.role,
             content: m.content,
@@ -74,11 +75,13 @@ function App() {
         throw new Error(err.error?.message || "OpenAI API error");
       }
 
-      const data = await res.json();
+      const decoder = new TextDecoder("utf-8");
+      const reader = res.body!.getReader();
+
       const assistantMsg: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: data.choices?.[0]?.message?.content || "No response",
+        content: "",
       };
 
       setMessages((prev) =>
@@ -86,6 +89,38 @@ function App() {
           .filter((m) => m.id !== "typing-indicator")
           .concat(assistantMsg)
       );
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+
+        const lines = chunk
+          .split("\n")
+          .filter((line) => line.trim().startsWith("data: "))
+          .map((line) => line.replace("data: ", "").trim());
+
+        for (const line of lines) {
+          if (line === "[DONE]") break;
+
+          try {
+            const json = JSON.parse(line);
+            const token = json.choices?.[0]?.delta?.content;
+            if (token) {
+              setMessages((prev) =>
+                prev.map((m) =>
+                  m.id === assistantMsg.id
+                    ? { ...m, content: m.content + token }
+                    : m
+                )
+              );
+            }
+          } catch (err) {
+            console.error("Streaming parse error", err);
+          }
+        }
+      }
     } catch (err: any) {
       console.error("OpenAI error:", err);
       const errorMsg: Message = {
