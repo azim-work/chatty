@@ -7,19 +7,21 @@ export interface Message {
   content: string;
 }
 
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+const MODEL_NAME = "GPT-4o";
+const model = "gpt-4o";
+const ENV_PASSWORD = import.meta.env.VITE_APP_PASSWORD;
 
 function App() {
-  const [loading, setLoading] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
 
+  const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = localStorage.getItem("chat-messages");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed;
-        }
+        if (Array.isArray(parsed)) return parsed;
       } catch {
         console.error("Invalid chat history");
       }
@@ -28,12 +30,46 @@ function App() {
   });
   const [input, setInput] = useState("");
 
+  // Auto-login if localStorage flag is present
+  useEffect(() => {
+    const wasAuthed = localStorage.getItem("hm-auth");
+    if (wasAuthed === "true") {
+      setAuthenticated(true);
+    }
+  }, []);
+
+  // Save chat history
   useEffect(() => {
     localStorage.setItem("chat-messages", JSON.stringify(messages));
   }, [messages]);
 
+  const tryLogin = () => {
+    if (password === ENV_PASSWORD) {
+      localStorage.setItem("hm-auth", "true");
+      setAuthenticated(true);
+      setPassword("");
+    } else if (!password.trim()) {
+      alert("Please enter the password.");
+    } else {
+      alert("Incorrect password.");
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("hm-auth");
+    setAuthenticated(false);
+    setPassword("");
+    setMessages([]);
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
+
+    const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+    if (!OPENAI_API_KEY) {
+      alert("Missing OpenAI API key.");
+      return;
+    }
 
     const userMsg: Message = {
       id: crypto.randomUUID(),
@@ -61,7 +97,7 @@ function App() {
           Authorization: `Bearer ${OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: "gpt-4o",
+          model,
           stream: true,
           messages: updatedMessages.map((m) => ({
             role: m.role,
@@ -85,9 +121,7 @@ function App() {
       };
 
       setMessages((prev) =>
-        [...prev]
-          .filter((m) => m.id !== "typing-indicator")
-          .concat(assistantMsg)
+        prev.filter((m) => m.id !== "typing-indicator").concat(assistantMsg)
       );
 
       while (true) {
@@ -95,7 +129,6 @@ function App() {
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-
         const lines = chunk
           .split("\n")
           .filter((line) => line.trim().startsWith("data: "))
@@ -121,7 +154,7 @@ function App() {
           }
         }
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("OpenAI error:", err);
       const errorMsg: Message = {
         id: crypto.randomUUID(),
@@ -129,7 +162,7 @@ function App() {
         content: "⚠️ Failed to fetch response from OpenAI.",
       };
       setMessages((prev) =>
-        [...prev].filter((m) => m.id !== "typing-indicator").concat(errorMsg)
+        prev.filter((m) => m.id !== "typing-indicator").concat(errorMsg)
       );
     } finally {
       setLoading(false);
@@ -140,13 +173,47 @@ function App() {
     if (e.key === "Enter") sendMessage();
   };
 
+  if (!authenticated) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-100">
+        <div className="p-6 rounded w-96">
+          <h2 className="text-lg font-bold mb-4">Enter Password</h2>
+          <input
+            type="password"
+            autoComplete="off"
+            autoFocus
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") tryLogin();
+            }}
+            className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
+          />
+          <button
+            onClick={tryLogin}
+            className="w-full bg-black text-white py-2 rounded"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen flex flex-col">
+      {/* Chat */}
       <div className="flex-1 overflow-y-auto">
-        <ChatWindow messages={messages} onClear={() => setMessages([])} />
+        <ChatWindow
+          modelName={MODEL_NAME}
+          messages={messages}
+          onClear={() => setMessages([])}
+          onLogout={logout}
+        />
       </div>
+
       {/* Input */}
-      <div className="p-8 bg-white  flex justify-center">
+      <div className="p-8 bg-white flex justify-center">
         <div className="relative w-full max-w-4xl">
           <input
             type="text"

@@ -3,11 +3,13 @@ import type { Message } from "../App";
 import MessageBubble from "./MessageBubble";
 
 type Props = {
+  modelName: string;
   messages: Message[];
   onClear: () => void;
+  onLogout: () => void;
 };
 
-const ChatWindow = ({ messages, onClear }: Props) => {
+const ChatWindow = ({ modelName, messages, onClear, onLogout }: Props) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   // scroll to bottom when messages change
@@ -20,17 +22,29 @@ const ChatWindow = ({ messages, onClear }: Props) => {
       {/* Header */}
       <div className="flex flex-col mb-4 px-4 pt-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-700">Chatty</h1>
-          <button
-            onClick={onClear}
-            className="text-sm px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition"
-          >
-            Clear Chat
-          </button>
+          <h1 className="text-lg font-semibold text-gray-700">
+            Chatty{" "}
+            <span className="text-xs font-normal text-gray-400">
+              ({modelName})
+            </span>
+          </h1>
+          <div className="flex gap-2">
+            <button
+              onClick={onClear}
+              className="text-sm px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition"
+            >
+              Clear Chat
+            </button>
+            <button
+              onClick={onLogout}
+              className="text-sm px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+            >
+              Logout
+            </button>
+          </div>
         </div>
-        <p className="text-xs text-gray-500 mt-1">
-          Chat with an AI assistant powered by OpenAI.
-        </p>
+
+        <p className="text-xs text-gray-500 mt-1">Feed your curiosity.</p>
       </div>
 
       {/* Messages OR Empty State */}
