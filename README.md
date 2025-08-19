@@ -1,9 +1,10 @@
 # Chatty
 
+https://chatty.azimb.com
+
 A sleek, local-first AI chatbot UI powered by OpenAI's GPT-4o.  
 Built with **React**, **TypeScript**, and **Vite**.
 
----
 
 ## 🧠 Features
 
@@ -14,7 +15,6 @@ Built with **React**, **TypeScript**, and **Vite**.
 - 🧼 Clear Chat and Logout functionality
 - 🌐 Deployed easily with Vercel or Netlify
 
----
 
 ## 🚀 Getting Started
 
@@ -43,7 +43,6 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
----
 
 ## 🛠 Development
 
@@ -55,7 +54,6 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 To modify the UI or add features, start with `App.tsx` or the component files in `/components`.
 
----
 
 ## 🗺️ Roadmap (Ideas)
 
