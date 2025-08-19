@@ -43,7 +43,8 @@ function App() {
     localStorage.setItem("chat-messages", JSON.stringify(messages));
   }, [messages]);
 
-  const tryLogin = () => {
+  const tryLogin = (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (password === ENV_PASSWORD) {
       localStorage.setItem("hm-auth", "true");
       setAuthenticated(true);
@@ -176,25 +177,29 @@ function App() {
   if (!authenticated) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-100">
-        <div className="p-6 rounded w-96">
-          <h2 className="text-lg font-bold mb-4">Enter Password</h2>
-          <input
-            type="password"
-            autoComplete="off"
-            autoFocus
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") tryLogin();
-            }}
-            className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
-          />
-          <button
-            onClick={tryLogin}
-            className="w-full bg-black text-white py-2 rounded"
-          >
-            Login
-          </button>
+        <div className="text-center">
+          <h1 className="text-5xl font-semibold text-neutral-900 mb-2 tracking-tight">
+            Chatty
+          </h1>
+          <p className="text-md text-gray-500 mb-8 ">Feed your curiosity.</p>
+
+          <form onSubmit={tryLogin} className="p-6 rounded w-96 mx-auto">
+            <input
+              type="password"
+              placeholder="Password"
+              autoComplete="off"
+              autoFocus
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
+            />
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 rounded hover:bg-neutral-800 transition"
+            >
+              Let's go!
+            </button>
+          </form>
         </div>
       </div>
     );
