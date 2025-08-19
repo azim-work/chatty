@@ -5,6 +5,14 @@ https://chatty.azimb.com
 A sleek, local-first AI chatbot UI powered by OpenAI's GPT-4o.  
 Built with **React**, **TypeScript**, and **Vite**.
 
+Chatty in action
+
+
+
+https://github.com/user-attachments/assets/97a703fe-2076-41f7-857b-9e44f3663c64
+
+
+
 
 ## 🧠 Features
 
