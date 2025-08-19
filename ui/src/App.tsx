@@ -60,7 +60,6 @@ function App() {
     localStorage.removeItem("hm-auth");
     setAuthenticated(false);
     setPassword("");
-    setMessages([]);
   };
 
   const sendMessage = async () => {
