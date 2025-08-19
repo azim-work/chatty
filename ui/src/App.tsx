@@ -155,7 +155,7 @@ function App() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={loading}
-            className="w-full border border-gray-500 rounded-full py-6 pl-8 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent"
+            className="w-full border border-gray-500 rounded-full py-4 pl-6 pr-12 text-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent"
           />
           <button
             onClick={sendMessage}
